@@ -1,11 +1,17 @@
 require("module-alias/register");
-const server = require("./server");
+
+const configs = require("~/configs");
+const server = require("~/server");
+const dbService = require("~/services/db.service");
 
 const startServer = async () => {
-  const PORT = process.env.PORT || 5000;
-  server.listen(PORT, () => {
-    console.log(`Server run on http://localhost:${PORT}`);
-  });
+	await dbService.connect();
+
+	server.listen(configs.server.port, () => {
+		console.log(
+			`Server run on http://localhost:${configs.server.port}`
+		);
+	});
 };
 
 startServer();
