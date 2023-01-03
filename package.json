@@ -1,0 +1,22 @@
+{
+  "name": "contactbook-backend",
+  "version": "1.0.0",
+  "description": "Contactbook backend",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/thangved/contactbook-backend.git"
+  },
+  "author": {
+    "name": "Minh Thang",
+    "url": "https://github.com/thangve"
+  },
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/thangved/contactbook-backend/issues"
+  },
+  "homepage": "https://github.com/thangved/contactbook-backend#readme"
+}
