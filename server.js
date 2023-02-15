@@ -1,7 +1,8 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
-const configs = require("./configs");
+
+const configs = require("~/configs");
 
 const server = express();
 
