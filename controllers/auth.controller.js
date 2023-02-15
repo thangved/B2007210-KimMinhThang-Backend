@@ -1,3 +1,4 @@
+const ApiError = require("~/api-error");
 const userModel = require("~/models/user.model");
 const jwtUtil = require("~/utils/jwt.util");
 const passwordUtil = require("~/utils/password.util");
@@ -5,10 +6,11 @@ const passwordUtil = require("~/utils/password.util");
 class AuthController {
 	/**
 	 *
-	 * @param {Request} req
-	 * @param {Response} res
+	 * @param {import('express').Request} req
+	 * @param {import('express').Response} res
+	 * @param {import("express").NextFunction} next
 	 */
-	async register(req, res) {
+	async register(req, res, next) {
 		try {
 			const existingUser = await userModel.findOne({
 				username: req.body.username,
@@ -34,18 +36,17 @@ class AuthController {
 				accessToken: jwtUtil.sign(newUser),
 			});
 		} catch (error) {
-			res.status(400).send({
-				message: error.message,
-			});
+			next(new ApiError(400, error.message));
 		}
 	}
 
 	/**
 	 *
-	 * @param {Request} req
-	 * @param {Response} res
+	 * @param {import('express').Request} req
+	 * @param {import('express').Response} res
+	 * @param {import("express").NextFunction} next
 	 */
-	async login(req, res) {
+	async login(req, res, next) {
 		try {
 			const username = req.body.username;
 			const password = req.body.password;
@@ -77,24 +78,21 @@ class AuthController {
 				),
 			});
 		} catch (error) {
-			res.status(400).send({
-				message: error.message,
-			});
+			next(new ApiError(400, error.message));
 		}
 	}
 
 	/**
 	 *
-	 * @param {Request} req
-	 * @param {Response} res
+	 * @param {import('express').Request} req
+	 * @param {import('express').Response} res
+	 * @param {import("express").NextFunction} next
 	 */
-	async auth(req, res) {
+	async auth(req, res, next) {
 		try {
 			res.send({ data: req.currentUser });
 		} catch (error) {
-			res.status(500).send({
-				message: "Internal server error",
-			});
+			next(new ApiError(500, error.message));
 		}
 	}
 }

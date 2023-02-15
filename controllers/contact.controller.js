@@ -1,12 +1,14 @@
+const ApiError = require("~/api-error");
 const contactModel = require("~/models/contact.model");
 
 class ContactController {
 	/**
 	 *
-	 * @param {Request} req
-	 * @param {Response} res
+	 * @param {import('express').Request} req
+	 * @param {import('express').Response} res
+	 * @param {import("express").NextFunction} next
 	 */
-	async create(req, res) {
+	async create(req, res, next) {
 		try {
 			const newContact = await contactModel.create({
 				...req.body,
@@ -15,54 +17,51 @@ class ContactController {
 
 			res.status(201).send(newContact.toObject());
 		} catch (error) {
-			res.status(400).send({
-				message: error.message,
-			});
+			next(new ApiError(400, error.message));
 		}
 	}
 
 	/**
 	 *
-	 * @param {Request} req
-	 * @param {Response} res
+	 * @param {import('express').Request} req
+	 * @param {import('express').Response} res
+	 * @param {import("express").NextFunction} next
 	 */
-	async getAll(req, res) {
+	async getAll(req, res, next) {
 		try {
 			const contacts = await contactModel.find({
 				createdBy: req.currentUser._id,
 			});
 			res.send(contacts.map((e) => e.toObject()));
 		} catch (error) {
-			res.status(500).send({
-				message: error.message,
-			});
+			next(new ApiError(500, error.message));
 		}
 	}
 
 	/**
 	 *
-	 * @param {Request} req
-	 * @param {Response} res
+	 * @param {import('express').Request} req
+	 * @param {import('express').Response} res
+	 * @param {import("express").NextFunction} next
 	 */
-	async deleteAll(req, res) {
+	async deleteAll(req, res, next) {
 		try {
 			await contactModel.deleteMany({
 				createdBy: req.currentUser._id,
 			});
 			res.status(200).end();
 		} catch (error) {
-			res.status(500).send({
-				message: error.message,
-			});
+			next(new ApiError(500, error.message));
 		}
 	}
 
 	/**
 	 *
-	 * @param {Request} req
-	 * @param {Response} res
+	 * @param {import('express').Request} req
+	 * @param {import('express').Response} res
+	 * @param {import("express").NextFunction} next
 	 */
-	async getAllFavorites(req, res) {
+	async getAllFavorites(req, res, next) {
 		try {
 			const contacts = await contactModel.find({
 				favorite: true,
@@ -70,18 +69,17 @@ class ContactController {
 			});
 			res.send(contacts.map((e) => e.toObject()));
 		} catch (error) {
-			res.status(500).send({
-				message: error.message,
-			});
+			next(new ApiError(500, error.message));
 		}
 	}
 
 	/**
 	 *
-	 * @param {Request} req
-	 * @param {Response} res
+	 * @param {import('express').Request} req
+	 * @param {import('express').Response} res
+	 * @param {import("express").NextFunction} next
 	 */
-	async getById(req, res) {
+	async getById(req, res, next) {
 		try {
 			const contact = await contactModel.findOne({
 				_id: req.params.id,
@@ -89,18 +87,17 @@ class ContactController {
 			});
 			res.send(contact.toObject());
 		} catch (error) {
-			res.status(400).send({
-				message: error.message,
-			});
+			next(new ApiError(400, error.message));
 		}
 	}
 
 	/**
 	 *
-	 * @param {Request} req
-	 * @param {Response} res
+	 * @param {import('express').Request} req
+	 * @param {import('express').Response} res
+	 * @param {import("express").NextFunction} next
 	 */
-	async updateById(req, res) {
+	async updateById(req, res, next) {
 		try {
 			await contactModel.findOneAndUpdate(
 				{
@@ -111,18 +108,17 @@ class ContactController {
 			);
 			res.status(200).end();
 		} catch (error) {
-			res.status(400).send({
-				message: error.message,
-			});
+			next(new ApiError(400, error.message));
 		}
 	}
 
 	/**
 	 *
-	 * @param {Request} req
-	 * @param {Response} res
+	 * @param {import('express').Request} req
+	 * @param {import('express').Response} res
+	 * @param {import("express").NextFunction} next
 	 */
-	async deleteById(req, res) {
+	async deleteById(req, res, next) {
 		try {
 			await contactModel.findByIdAndDelete({
 				_id: req.params.id,
@@ -130,9 +126,7 @@ class ContactController {
 			});
 			res.status(200).end();
 		} catch (error) {
-			res.status(400).send({
-				message: error.message,
-			});
+			next(new ApiError(400, error.message));
 		}
 	}
 }
